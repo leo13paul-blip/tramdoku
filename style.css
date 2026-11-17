@@ -1,0 +1,182 @@
+/* --- Styles de base --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+#compteur-erreurs {
+    font-weight: bold;
+    color: #e74c3c;
+    font-size: 1.2em;
+}
+
+/* --- La Grille (Modifiée pour 2x2) --- */
+.grid-container {
+    display: grid;
+    /* 3 colonnes : 1 pour le titre, 2 pour le jeu */
+    grid-template-columns: 140px 140px 140px; 
+    /* 3 lignes : 1 pour le titre, 2 pour le jeu */
+    grid-template-rows: auto 140px 140px; 
+    gap: 8px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.header-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9em;
+    padding: 10px;
+    background-color: #e0e6ed;
+    border-radius: 6px;
+    color: #2c3e50;
+}
+
+.empty {
+    background-color: transparent;
+}
+
+/* Les cases jouables */
+.game-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #f8f9fa;
+    border: 2px dashed #bdc3c7;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    padding: 5px;
+}
+
+.game-cell:hover {
+    background-color: #e8f4f8;
+    border-color: #3498db;
+}
+
+/* État quand une case est validée */
+.game-cell.correct {
+    background-color: #2ecc71;
+    border: 2px solid #27ae60;
+    color: white;
+    cursor: default;
+}
+
+/* --- Fenêtre de recherche (Modale) --- */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+#hint-possibilites {
+    color: #8e44ad;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-top: -10px;
+}
+
+/* Barre de recherche et Auto-complétion */
+.search-container {
+    position: relative;
+    margin-top: 20px;
+}
+
+#station-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #bdc3c7;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+#station-input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+#suggestions-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    position: absolute;
+    width: 100%;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#suggestions-list li {
+    padding: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+#suggestions-list li:last-child {
+    border-bottom: none;
+}
+
+#suggestions-list li:hover {
+    background-color: #3498db;
+    color: white;
+}
