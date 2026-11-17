@@ -7,20 +7,47 @@ let stationsUtilisees = [];
 let jeuTermine = false; 
 const MAX_ERREURS = 3; 
 
+// --- Système de génération lié à la date ---
+let graineAleatoire = 1; 
+
+function generateurAleatoireLocal() {
+    let x = Math.sin(graineAleatoire++) * 10000;
+    return x - Math.floor(x);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('close-modal').addEventListener('click', fermerModale);
     document.getElementById('station-input').addEventListener('input', gererRecherche);
+    document.getElementById('btn-close-alert').addEventListener('click', () => document.getElementById('alert-modal').classList.add('hidden'));
     
     document.getElementById('btn-abandon').addEventListener('click', () => declarerFinDePartie(false, "abandon"));
-    document.getElementById('btn-rejouer').addEventListener('click', initialiserNouvellePartie);
+    // En cliquant sur rejouer, on passe en mode "Entraînement" (grilles aléatoires)
+    document.getElementById('btn-rejouer').addEventListener('click', () => initialiserNouvellePartie(false));
 
     fetch('stations.json')
         .then(response => response.json())
-        .then(data => { donneesJeu = data; initialiserNouvellePartie(); })
+        .then(data => { 
+            donneesJeu = data; 
+            initialiserNouvellePartie(true); // true = mode "Grille du Jour"
+        })
         .catch(error => console.error("Erreur JSON :", error));
 });
 
-function initialiserNouvellePartie() {
+function initialiserNouvellePartie(estGrilleDuJour = false) {
+    if (estGrilleDuJour) {
+        // Initialiser la graine mathématique basée sur la date (ex: 20261117)
+        const dateAujourdhui = new Date();
+        graineAleatoire = dateAujourdhui.getFullYear() * 10000 + (dateAujourdhui.getMonth() + 1) * 100 + dateAujourdhui.getDate();
+        
+        // Afficher la date sur l'interface
+        const optionsDate = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        document.getElementById('date-grille').textContent = "Grille du " + dateAujourdhui.toLocaleDateString('fr-FR', optionsDate);
+    } else {
+        // Mode entraînement : on reprend l'aléatoire normal
+        graineAleatoire = Math.random() * 1000000;
+        document.getElementById('date-grille').textContent = "Grille d'entraînement";
+    }
+
     let grilleValide = false;
     while (!grilleValide) {
         const indexCategories = Object.keys(donneesJeu._legende_attributs);
@@ -45,7 +72,7 @@ function verifierGrilleFaisable(lignes, colonnes) {
 
 function melangerTableau(array) {
     for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(generateurAleatoireLocal() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
@@ -59,13 +86,12 @@ function afficherGrille() {
 
     document.querySelectorAll('.game-cell').forEach(cellule => {
         cellule.textContent = "";
-        cellule.className = "game-cell"; // Reset les classes
+        cellule.className = "game-cell"; 
         const nouvelleCellule = cellule.cloneNode(true);
         cellule.parentNode.replaceChild(nouvelleCellule, cellule);
         nouvelleCellule.addEventListener('click', () => ouvrirModale(nouvelleCellule));
     });
 
-    // Reset des variables d'état
     grilleGagnee = 0;
     erreurs = 0;
     stationsUtilisees = [];
@@ -76,48 +102,35 @@ function afficherGrille() {
 }
 
 function ouvrirModale(celluleHtml) {
-    // Si le jeu n'est pas terminé, on empêche de rouvrir une case validée
     if (!jeuTermine && celluleHtml.classList.contains('correct')) return; 
 
     const row = celluleHtml.getAttribute('data-row');
     const col = celluleHtml.getAttribute('data-col');
     caseActive = { row: parseInt(row), col: parseInt(col), element: celluleHtml };
-
     const indexL = categoriesChoisies.lignes[row];
     const indexC = categoriesChoisies.colonnes[col];
     
-    document.getElementById('current-intersection').textContent = 
-        `${donneesJeu._legende_attributs[indexL]} + ${donneesJeu._legende_attributs[indexC]}`;
-
-    // Récupérer TOUTES les stations valides pour cette intersection
+    document.getElementById('current-intersection').textContent = `${donneesJeu._legende_attributs[indexL]} + ${donneesJeu._legende_attributs[indexC]}`;
     const toutesLesSolutions = donneesJeu.stations.filter(s => s.attributs[indexL] === 1 && s.attributs[indexC] === 1);
-    
     const liste = document.getElementById('suggestions-list');
     liste.innerHTML = "";
     document.getElementById('search-modal').classList.remove('hidden');
 
     if (jeuTermine) {
-        // --- MODE LECTURE (JEU TERMINÉ) ---
         document.getElementById('modal-title').textContent = "Solutions possibles";
         document.getElementById('hint-possibilites').textContent = `Il y avait ${toutesLesSolutions.length} réponse(s) valable(s) :`;
-        document.getElementById('station-input').classList.add('hidden'); // On cache la barre de recherche
-        
+        document.getElementById('station-input').classList.add('hidden'); 
         toutesLesSolutions.forEach(s => {
             const li = document.createElement('li');
             li.textContent = s.nom;
             li.classList.add('solution-item');
-            if (stationsUtilisees.includes(s.id)) {
-                li.style.color = '#27ae60'; // Met en vert la station qui a été jouée
-                li.style.fontWeight = 'bold';
-            }
+            if (stationsUtilisees.includes(s.id)) { li.style.color = '#27ae60'; li.style.fontWeight = 'bold'; }
             liste.appendChild(li);
         });
     } else {
-        // --- MODE JEU ---
         const nbPossibilitesRestantes = toutesLesSolutions.filter(s => !stationsUtilisees.includes(s.id)).length;
         document.getElementById('modal-title').textContent = "Trouver une station";
         document.getElementById('hint-possibilites').textContent = `Indice : Il reste ${nbPossibilitesRestantes} solution(s) pour cette case.`;
-        
         const input = document.getElementById('station-input');
         input.classList.remove('hidden');
         input.value = "";
@@ -137,13 +150,18 @@ function gererRecherche(event) {
     if (texteSaisi.length < 2) return; 
 
     const resultats = donneesJeu.stations.filter(s => s.nom.toLowerCase().includes(texteSaisi) && !stationsUtilisees.includes(s.id));
-
     resultats.slice(0, 5).forEach(station => {
         const li = document.createElement('li');
         li.textContent = station.nom;
         li.addEventListener('click', () => verifierReponse(station));
         liste.appendChild(li);
     });
+}
+
+function afficherAlerte(titre, message) {
+    document.getElementById('alert-title').textContent = titre;
+    document.getElementById('alert-message').textContent = message;
+    document.getElementById('alert-modal').classList.remove('hidden');
 }
 
 function verifierReponse(stationChoisie) {
@@ -155,7 +173,6 @@ function verifierReponse(stationChoisie) {
         caseActive.element.classList.add('correct');
         stationsUtilisees.push(stationChoisie.id); 
         grilleGagnee++;
-        
         if (grilleGagnee === 4) declarerFinDePartie(true);
     } else {
         erreurs++;
@@ -164,7 +181,7 @@ function verifierReponse(stationChoisie) {
         if (erreurs >= MAX_ERREURS) {
             declarerFinDePartie(false, "defaite");
         } else {
-            alert(`Faux ! ${stationChoisie.nom} n'est pas bon. Plus que ${MAX_ERREURS - erreurs} essai(s).`);
+            afficherAlerte("Mauvaise réponse", `Faux ! L'arrêt ${stationChoisie.nom} ne valide pas cette case.\nPlus que ${MAX_ERREURS - erreurs} essai(s).`);
         }
     }
     fermerModale();
@@ -176,17 +193,17 @@ function declarerFinDePartie(victoire, raison = "") {
     document.getElementById('btn-rejouer').classList.remove('hidden');
 
     if (victoire) {
-        setTimeout(() => alert("tu as gagné, CACA\n(Cliquez sur les cases pour voir les autres solutions)"), 300);
+        setTimeout(() => afficherAlerte("Victoire !", "Tu as gagné, CACA !\n\nCliquez sur les cases pour voir les autres solutions."), 300);
     } else {
         document.querySelectorAll('.game-cell:not(.correct)').forEach(c => {
             c.textContent = "?";
-            c.classList.add('missed'); // Affiche les cases ratées en rouge
+            c.classList.add('missed');
         });
         
         if (raison === "abandon") {
-            alert("Vous avez abandonné ! Cliquez sur les cases pour voir les solutions.");
+            afficherAlerte("Abandon", "Vous avez abandonné !\n\nCliquez sur les cases rouges pour voir les solutions.");
         } else {
-            setTimeout(() => alert("tu as perdu, PIPI !\nCliquez sur les cases pour voir les solutions."), 300);
+            setTimeout(() => afficherAlerte("Défaite", "Tu as perdu, PIPI !\n\nCliquez sur les cases rouges pour voir les solutions."), 300);
         }
     }
 }
