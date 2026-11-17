@@ -7,9 +7,7 @@ let stationsUtilisees = [];
 let jeuTermine = false; 
 const MAX_ERREURS = 3; 
 
-// --- Système de génération lié à la date ---
 let graineAleatoire = 1; 
-
 function generateurAleatoireLocal() {
     let x = Math.sin(graineAleatoire++) * 10000;
     return x - Math.floor(x);
@@ -21,29 +19,49 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-close-alert').addEventListener('click', () => document.getElementById('alert-modal').classList.add('hidden'));
     
     document.getElementById('btn-abandon').addEventListener('click', () => declarerFinDePartie(false, "abandon"));
-    // En cliquant sur rejouer, on passe en mode "Entraînement" (grilles aléatoires)
     document.getElementById('btn-rejouer').addEventListener('click', () => initialiserNouvellePartie(false));
 
     fetch('stations.json')
         .then(response => response.json())
         .then(data => { 
             donneesJeu = data; 
-            initialiserNouvellePartie(true); // true = mode "Grille du Jour"
+            initialiserNouvellePartie(true); 
         })
         .catch(error => console.error("Erreur JSON :", error));
 });
 
+// --- FONCTIONS DE FORMATAGE VISUEL (LIGNES TAG) ---
+// Transforme le texte de la catégorie pour inclure le logo de la ligne
+function formaterTexteLigne(texte) {
+    return texte
+        .replace("Ligne A", "Ligne <span class='ligne-badge ligne-A'>A</span>")
+        .replace("Ligne B", "Ligne <span class='ligne-badge ligne-B'>B</span>")
+        .replace("Ligne C", "Ligne <span class='ligne-badge ligne-C'>C</span>")
+        .replace("Ligne D", "Ligne <span class='ligne-badge ligne-D'>D</span>")
+        .replace("Ligne E", "Ligne <span class='ligne-badge ligne-E'>E</span>");
+}
+
+// Génère le nom de la station avec les petits logos des lignes à côté
+function genererHTMLStation(station) {
+    let badgesHtml = "";
+    const lignesLettres = ['A', 'B', 'C', 'D', 'E'];
+    // On vérifie les attributs [0] à [4] (qui correspondent aux 5 lignes)
+    for(let i = 0; i < 5; i++) {
+        if(station.attributs[i] === 1) {
+            badgesHtml += `<span class="ligne-badge ligne-${lignesLettres[i]}">${lignesLettres[i]}</span>`;
+        }
+    }
+    return `<span>${station.nom}</span> <div class="lignes-container">${badgesHtml}</div>`;
+}
+// ---------------------------------------------------
+
 function initialiserNouvellePartie(estGrilleDuJour = false) {
     if (estGrilleDuJour) {
-        // Initialiser la graine mathématique basée sur la date (ex: 20261117)
         const dateAujourdhui = new Date();
         graineAleatoire = dateAujourdhui.getFullYear() * 10000 + (dateAujourdhui.getMonth() + 1) * 100 + dateAujourdhui.getDate();
-        
-        // Afficher la date sur l'interface
         const optionsDate = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
         document.getElementById('date-grille').textContent = "Grille du " + dateAujourdhui.toLocaleDateString('fr-FR', optionsDate);
     } else {
-        // Mode entraînement : on reprend l'aléatoire normal
         graineAleatoire = Math.random() * 1000000;
         document.getElementById('date-grille').textContent = "Grille d'entraînement";
     }
@@ -80,12 +98,13 @@ function melangerTableau(array) {
 
 function afficherGrille() {
     for (let i = 0; i < 2; i++) {
-        document.getElementById(`cat-row-${i}`).textContent = donneesJeu._legende_attributs[categoriesChoisies.lignes[i]];
-        document.getElementById(`cat-col-${i}`).textContent = donneesJeu._legende_attributs[categoriesChoisies.colonnes[i]];
+        // Utilisation de formaterTexteLigne pour afficher les logos dans les en-têtes
+        document.getElementById(`cat-row-${i}`).innerHTML = formaterTexteLigne(donneesJeu._legende_attributs[categoriesChoisies.lignes[i]]);
+        document.getElementById(`cat-col-${i}`).innerHTML = formaterTexteLigne(donneesJeu._legende_attributs[categoriesChoisies.colonnes[i]]);
     }
 
     document.querySelectorAll('.game-cell').forEach(cellule => {
-        cellule.textContent = "";
+        cellule.innerHTML = "";
         cellule.className = "game-cell"; 
         const nouvelleCellule = cellule.cloneNode(true);
         cellule.parentNode.replaceChild(nouvelleCellule, cellule);
@@ -110,7 +129,10 @@ function ouvrirModale(celluleHtml) {
     const indexL = categoriesChoisies.lignes[row];
     const indexC = categoriesChoisies.colonnes[col];
     
-    document.getElementById('current-intersection').textContent = `${donneesJeu._legende_attributs[indexL]} + ${donneesJeu._legende_attributs[indexC]}`;
+    // Affichage des logos dans l'intersection de la modale
+    const texteIntersection = `${donneesJeu._legende_attributs[indexL]} + ${donneesJeu._legende_attributs[indexC]}`;
+    document.getElementById('current-intersection').innerHTML = formaterTexteLigne(texteIntersection);
+    
     const toutesLesSolutions = donneesJeu.stations.filter(s => s.attributs[indexL] === 1 && s.attributs[indexC] === 1);
     const liste = document.getElementById('suggestions-list');
     liste.innerHTML = "";
@@ -120,9 +142,10 @@ function ouvrirModale(celluleHtml) {
         document.getElementById('modal-title').textContent = "Solutions possibles";
         document.getElementById('hint-possibilites').textContent = `Il y avait ${toutesLesSolutions.length} réponse(s) valable(s) :`;
         document.getElementById('station-input').classList.add('hidden'); 
+        
         toutesLesSolutions.forEach(s => {
             const li = document.createElement('li');
-            li.textContent = s.nom;
+            li.innerHTML = genererHTMLStation(s); // Affiche le nom ET les logos
             li.classList.add('solution-item');
             if (stationsUtilisees.includes(s.id)) { li.style.color = '#27ae60'; li.style.fontWeight = 'bold'; }
             liste.appendChild(li);
@@ -152,7 +175,7 @@ function gererRecherche(event) {
     const resultats = donneesJeu.stations.filter(s => s.nom.toLowerCase().includes(texteSaisi) && !stationsUtilisees.includes(s.id));
     resultats.slice(0, 5).forEach(station => {
         const li = document.createElement('li');
-        li.textContent = station.nom;
+        li.innerHTML = genererHTMLStation(station); // Affiche le nom ET les logos dans la recherche
         li.addEventListener('click', () => verifierReponse(station));
         liste.appendChild(li);
     });
@@ -169,7 +192,8 @@ function verifierReponse(stationChoisie) {
     const indexC = categoriesChoisies.colonnes[caseActive.col];
 
     if (stationChoisie.attributs[indexL] === 1 && stationChoisie.attributs[indexC] === 1) {
-        caseActive.element.textContent = stationChoisie.nom;
+        // Enregistre la bonne réponse dans la case AVEC les logos
+        caseActive.element.innerHTML = genererHTMLStation(stationChoisie);
         caseActive.element.classList.add('correct');
         stationsUtilisees.push(stationChoisie.id); 
         grilleGagnee++;
@@ -196,7 +220,7 @@ function declarerFinDePartie(victoire, raison = "") {
         setTimeout(() => afficherAlerte("Victoire !", "Tu as gagné, CACA !\n\nCliquez sur les cases pour voir les autres solutions."), 300);
     } else {
         document.querySelectorAll('.game-cell:not(.correct)').forEach(c => {
-            c.textContent = "?";
+            c.innerHTML = "?";
             c.classList.add('missed');
         });
         
