@@ -21,6 +21,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-abandon').addEventListener('click', () => declarerFinDePartie(false, "abandon"));
     document.getElementById('btn-rejouer').addEventListener('click', () => initialiserNouvellePartie(false));
 
+    // Clic pour fermer les écrans géants
+    document.getElementById('ecran-caca').addEventListener('click', function() {
+        this.classList.add('hidden');
+    });
+    document.getElementById('ecran-pipi').addEventListener('click', function() {
+        this.classList.add('hidden');
+    });
+
+    // Chargement du JSON
     fetch('stations.json')
         .then(response => response.json())
         .then(data => { 
@@ -140,7 +149,7 @@ function ouvrirModale(celluleHtml) {
         
         toutesLesSolutions.forEach(s => {
             const li = document.createElement('li');
-            li.innerHTML = genererHTMLStation(s); // Ici on garde les logos pour la correction
+            li.innerHTML = genererHTMLStation(s); 
             li.classList.add('solution-item');
             if (stationsUtilisees.includes(s.id)) { li.style.color = '#27ae60'; li.style.fontWeight = 'bold'; }
             liste.appendChild(li);
@@ -170,7 +179,7 @@ function gererRecherche(event) {
     const resultats = donneesJeu.stations.filter(s => s.nom.toLowerCase().includes(texteSaisi) && !stationsUtilisees.includes(s.id));
     resultats.slice(0, 5).forEach(station => {
         const li = document.createElement('li');
-        // CORRECTION ICI : On n'affiche que le nom, fini la triche !
+        // On n'affiche que le nom dans la recherche, pas de triche avec les bulles de couleur !
         li.textContent = station.nom;
         li.addEventListener('click', () => verifierReponse(station));
         liste.appendChild(li);
@@ -188,7 +197,6 @@ function verifierReponse(stationChoisie) {
     const indexC = categoriesChoisies.colonnes[caseActive.col];
 
     if (stationChoisie.attributs[indexL] === 1 && stationChoisie.attributs[indexC] === 1) {
-        // Enregistre la bonne réponse dans la case AVEC les logos
         caseActive.element.innerHTML = genererHTMLStation(stationChoisie);
         caseActive.element.classList.add('correct');
         stationsUtilisees.push(stationChoisie.id); 
@@ -213,7 +221,7 @@ function declarerFinDePartie(victoire, raison = "") {
     document.getElementById('btn-rejouer').classList.remove('hidden');
 
     if (victoire) {
-        // Affiche l'écran CACA géant
+        // Affiche l'écran géant CACA
         setTimeout(() => document.getElementById('ecran-caca').classList.remove('hidden'), 300);
     } else {
         document.querySelectorAll('.game-cell:not(.correct)').forEach(c => {
@@ -224,23 +232,8 @@ function declarerFinDePartie(victoire, raison = "") {
         if (raison === "abandon") {
             afficherAlerte("Abandon", "Vous avez abandonné !\n\nCliquez sur les cases rouges pour voir les solutions.");
         } else {
-            // Affiche l'écran PIPI géant
+            // Affiche l'écran géant PIPI
             setTimeout(() => document.getElementById('ecran-pipi').classList.remove('hidden'), 300);
-        }
-    }
-}
-
-// Ajouter les clics pour fermer les écrans géants
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('ecran-caca').addEventListener('click', function() {
-        this.classList.add('hidden');
-    });
-    
-    document.getElementById('ecran-pipi').addEventListener('click', function() {
-        this.classList.add('hidden');
-    });
-});
-            setTimeout(() => afficherAlerte("Défaite", "Tu as perdu, PIPI !\n\nCliquez sur les cases rouges pour voir les solutions."), 300);
         }
     }
 }
