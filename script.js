@@ -213,7 +213,8 @@ function declarerFinDePartie(victoire, raison = "") {
     document.getElementById('btn-rejouer').classList.remove('hidden');
 
     if (victoire) {
-        setTimeout(() => afficherAlerte("Victoire !", "Tu as gagné, CACA !\n\nCliquez sur les cases pour voir les autres solutions."), 300);
+        // Affiche l'écran CACA géant
+        setTimeout(() => document.getElementById('ecran-caca').classList.remove('hidden'), 300);
     } else {
         document.querySelectorAll('.game-cell:not(.correct)').forEach(c => {
             c.innerHTML = "?";
@@ -223,6 +224,22 @@ function declarerFinDePartie(victoire, raison = "") {
         if (raison === "abandon") {
             afficherAlerte("Abandon", "Vous avez abandonné !\n\nCliquez sur les cases rouges pour voir les solutions.");
         } else {
+            // Affiche l'écran PIPI géant
+            setTimeout(() => document.getElementById('ecran-pipi').classList.remove('hidden'), 300);
+        }
+    }
+}
+
+// Ajouter les clics pour fermer les écrans géants
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('ecran-caca').addEventListener('click', function() {
+        this.classList.add('hidden');
+    });
+    
+    document.getElementById('ecran-pipi').addEventListener('click', function() {
+        this.classList.add('hidden');
+    });
+});
             setTimeout(() => afficherAlerte("Défaite", "Tu as perdu, PIPI !\n\nCliquez sur les cases rouges pour voir les solutions."), 300);
         }
     }
