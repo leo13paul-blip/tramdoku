@@ -180,3 +180,29 @@ h1 {
     background-color: #3498db;
     color: white;
 }
+/* --- Date du jour et Alerte personnalisée --- */
+.date-display {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #3498db;
+    margin-top: -10px;
+    text-transform: capitalize;
+}
+
+.alert-box {
+    text-align: center;
+    max-width: 300px;
+}
+
+#alert-message {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    white-space: pre-line; /* Permet les retours à la ligne */
+}
+
+#btn-close-alert {
+    background-color: #3498db;
+}
+#btn-close-alert:hover {
+    background-color: #2980b9;
+}
