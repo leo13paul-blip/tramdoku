@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- FONCTIONS DE FORMATAGE VISUEL (LIGNES TAG) ---
-// Transforme le texte de la catégorie pour inclure le logo de la ligne
 function formaterTexteLigne(texte) {
     return texte
         .replace("Ligne A", "Ligne <span class='ligne-badge ligne-A'>A</span>")
@@ -41,11 +40,9 @@ function formaterTexteLigne(texte) {
         .replace("Ligne E", "Ligne <span class='ligne-badge ligne-E'>E</span>");
 }
 
-// Génère le nom de la station avec les petits logos des lignes à côté
 function genererHTMLStation(station) {
     let badgesHtml = "";
     const lignesLettres = ['A', 'B', 'C', 'D', 'E'];
-    // On vérifie les attributs [0] à [4] (qui correspondent aux 5 lignes)
     for(let i = 0; i < 5; i++) {
         if(station.attributs[i] === 1) {
             badgesHtml += `<span class="ligne-badge ligne-${lignesLettres[i]}">${lignesLettres[i]}</span>`;
@@ -98,7 +95,6 @@ function melangerTableau(array) {
 
 function afficherGrille() {
     for (let i = 0; i < 2; i++) {
-        // Utilisation de formaterTexteLigne pour afficher les logos dans les en-têtes
         document.getElementById(`cat-row-${i}`).innerHTML = formaterTexteLigne(donneesJeu._legende_attributs[categoriesChoisies.lignes[i]]);
         document.getElementById(`cat-col-${i}`).innerHTML = formaterTexteLigne(donneesJeu._legende_attributs[categoriesChoisies.colonnes[i]]);
     }
@@ -129,7 +125,6 @@ function ouvrirModale(celluleHtml) {
     const indexL = categoriesChoisies.lignes[row];
     const indexC = categoriesChoisies.colonnes[col];
     
-    // Affichage des logos dans l'intersection de la modale
     const texteIntersection = `${donneesJeu._legende_attributs[indexL]} + ${donneesJeu._legende_attributs[indexC]}`;
     document.getElementById('current-intersection').innerHTML = formaterTexteLigne(texteIntersection);
     
@@ -145,7 +140,7 @@ function ouvrirModale(celluleHtml) {
         
         toutesLesSolutions.forEach(s => {
             const li = document.createElement('li');
-            li.innerHTML = genererHTMLStation(s); // Affiche le nom ET les logos
+            li.innerHTML = genererHTMLStation(s); // Ici on garde les logos pour la correction
             li.classList.add('solution-item');
             if (stationsUtilisees.includes(s.id)) { li.style.color = '#27ae60'; li.style.fontWeight = 'bold'; }
             liste.appendChild(li);
@@ -175,7 +170,8 @@ function gererRecherche(event) {
     const resultats = donneesJeu.stations.filter(s => s.nom.toLowerCase().includes(texteSaisi) && !stationsUtilisees.includes(s.id));
     resultats.slice(0, 5).forEach(station => {
         const li = document.createElement('li');
-        li.innerHTML = genererHTMLStation(station); // Affiche le nom ET les logos dans la recherche
+        // CORRECTION ICI : On n'affiche que le nom, fini la triche !
+        li.textContent = station.nom;
         li.addEventListener('click', () => verifierReponse(station));
         liste.appendChild(li);
     });
