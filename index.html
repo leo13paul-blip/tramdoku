@@ -9,7 +9,7 @@
 <body>
 
     <header>
-        <h1>Tramdoku Grenoble</h1>
+        <h1>RAPDOKU (FR)</h1>
         <p id="date-grille" class="date-display">Chargement de la date...</p>
         <p>Complétez la grille avec des rappeurs francophones</p>
         <p id="compteur-erreurs">Erreurs : 0 / 3</p>
@@ -17,17 +17,29 @@
 
     <main>
         <div class="grid-container" id="game-grid">
+            <!-- En-têtes Colonnes -->
             <div class="header-cell empty"></div>
             <div class="header-cell col-header" id="cat-col-0">Col 1</div>
             <div class="header-cell col-header" id="cat-col-1">Col 2</div>
+            <div class="header-cell col-header" id="cat-col-2">Col 3</div>
 
+            <!-- Ligne 1 -->
             <div class="header-cell row-header" id="cat-row-0">Ligne 1</div>
             <div class="game-cell" data-row="0" data-col="0"></div>
             <div class="game-cell" data-row="0" data-col="1"></div>
+            <div class="game-cell" data-row="0" data-col="2"></div>
 
+            <!-- Ligne 2 -->
             <div class="header-cell row-header" id="cat-row-1">Ligne 2</div>
             <div class="game-cell" data-row="1" data-col="0"></div>
             <div class="game-cell" data-row="1" data-col="1"></div>
+            <div class="game-cell" data-row="1" data-col="2"></div>
+
+            <!-- Ligne 3 -->
+            <div class="header-cell row-header" id="cat-row-2">Ligne 3</div>
+            <div class="game-cell" data-row="2" data-col="0"></div>
+            <div class="game-cell" data-row="2" data-col="1"></div>
+            <div class="game-cell" data-row="2" data-col="2"></div>
         </div>
 
         <div class="actions-container">
