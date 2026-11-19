@@ -30,8 +30,8 @@ h1 {
 /* --- La Grille --- */
 .grid-container {
     display: grid;
-    grid-template-columns: 140px 140px 140px; 
-    grid-template-rows: auto 140px 140px; 
+    grid-template-columns: repeat(4, 115px); 
+    grid-template-rows: auto 115px 115px 115px; 
     gap: 8px;
     background-color: #fff;
     padding: 15px;
