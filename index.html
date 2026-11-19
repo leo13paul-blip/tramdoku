@@ -87,7 +87,54 @@
         <h1 class="texte-pipi">PERDU = PIPI</h1>
         <p class="cliquez-pour-fermer" style="color: black;">Cliquez n'importe où pour voir les solutions</p>
     </div>
+<!-- Pied de page discret -->
+    <footer class="collab-footer">
+        <button id="btn-open-ajout" class="btn-link">➕ Proposer un rappeur</button>
+        <span>•</span>
+        <button id="btn-open-erreur" class="btn-link">🚩 Signaler une erreur</button>
+    </footer>
 
+    <!-- Modale 1 : Proposer un rappeur -->
+    <div id="modal-ajout" class="modal hidden">
+        <div class="modal-content modal-large">
+            <span class="close-btn" id="close-ajout">&times;</span>
+            <h2>Proposer un rappeur</h2>
+            <p class="form-info">Coche au moins <strong>3 catégories</strong> valides (hors orthographe).</p>
+            
+            <form id="form-ajout">
+                <input type="text" id="ajout-nom" placeholder="Nom du rappeur (ex: Luidji)" required>
+                <div id="ajout-categories-list" class="checkbox-grid"></div>
+                <input type="text" id="ajout-feats" placeholder="Feats connus séparés par des virgules (facultatif)">
+                <p id="ajout-erreur-msg" class="error-text hidden">⚠️ Il faut cocher au moins 3 catégories !</p>
+                <button type="submit" class="btn-action">Envoyer la proposition</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modale 2 : Signaler une erreur -->
+    <div id="modal-erreur" class="modal hidden">
+        <div class="modal-content modal-large">
+            <span class="close-btn" id="close-erreur">&times;</span>
+            <h2>Signaler une erreur</h2>
+            
+            <form id="form-erreur">
+                <label>Artiste concerné :</label>
+                <select id="erreur-rappeur" required></select>
+
+                <label>Catégorie concernée :</label>
+                <select id="erreur-categorie" required></select>
+
+                <label>Type de problème :</label>
+                <select id="erreur-type" required>
+                    <option value="Manquant">Cet artiste DEVRAIT compter dans cette catégorie</option>
+                    <option value="En trop">Cet artiste NE DEVRAIT PAS compter dans cette catégorie</option>
+                </select>
+
+                <textarea id="erreur-details" rows="3" placeholder="Explication ou lien de preuve (facultatif)..."></textarea>
+                <button type="submit" class="btn-action">Envoyer le signalement</button>
+            </form>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
