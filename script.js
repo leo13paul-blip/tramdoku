@@ -9,7 +9,7 @@ let jeuTermine = false;
 const MAX_ERREURS = 3; 
 
 // Passe cette valeur à 5 quand tu auras rentré tes 300 rappeurs !
-const MIN_REPONSES_CATEGORIE = 3; 
+const MIN_REPONSES_CATEGORIE = 5; 
 
 let graineAleatoire = 1; 
 function generateurAleatoireLocal() {
