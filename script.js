@@ -309,3 +309,139 @@ function declarerFinDePartie(victoire, raison = "") {
         }
     }
 }
+// ==========================================
+// --- SYSTÈME COLLABORATIF (FORMSPREE) ---
+// ==========================================
+const FORMSPREE_URL = "https://formspree.io/f/xeagzzbp"; // ex: https://formspree.io/f/abcd1234
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Ouverture / Fermeture des modales
+    document.getElementById('btn-open-ajout').addEventListener('click', () => {
+        remplirFormulaireAjout();
+        document.getElementById('modal-ajout').classList.remove('hidden');
+    });
+    document.getElementById('close-ajout').addEventListener('click', () => {
+        document.getElementById('modal-ajout').classList.add('hidden');
+    });
+
+    document.getElementById('btn-open-erreur').addEventListener('click', () => {
+        remplirFormulaireErreur();
+        document.getElementById('modal-erreur').classList.remove('hidden');
+    });
+    document.getElementById('close-erreur').addEventListener('click', () => {
+        document.getElementById('modal-erreur').classList.add('hidden');
+    });
+
+    // Soumission : Ajout de rappeur
+    document.getElementById('form-ajout').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nom = document.getElementById('ajout-nom').value.trim();
+        const feats = document.getElementById('ajout-feats').value.trim();
+        const checkboxes = document.querySelectorAll('#ajout-categories-list input[type="checkbox"]');
+        
+        let attributs = [];
+        let nbCoches = 0;
+        let categoriesTexte = [];
+
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                attributs.push(1);
+                nbCoches++;
+                categoriesTexte.push(cb.getAttribute('data-label'));
+            } else {
+                attributs.push(0);
+            }
+        });
+
+        // Vérification de la règle des 3 catégories minimum
+        const msgErreur = document.getElementById('ajout-erreur-msg');
+        if (nbCoches < 3) {
+            msgErreur.classList.remove('hidden');
+            return;
+        }
+        msgErreur.classList.add('hidden');
+
+        // Génère la ligne JSON prête à copier-coller !
+        const idGenere = nettoyerTexte(nom.toLowerCase()).replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+        const featsArray = feats ? feats.split(',').map(f => nettoyerTexte(f.trim().toLowerCase()).replace(/[^a-z0-9]+/g, '_')) : [];
+        const ligneJSON = JSON.stringify({ id: idGenere, nom: nom, attributs: attributs, feats: featsArray });
+
+        await envoyerVersFormspree({
+            type_demande: "AJOUT RAPPEUR",
+            rappeur: nom,
+            categories_cochees: categoriesTexte.join(", "),
+            ligne_json_prete: ligneJSON
+        }, 'modal-ajout', 'form-ajout');
+    });
+
+    // Soumission : Signalement d'erreur
+    document.getElementById('form-erreur').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await envoyerVersFormspree({
+            type_demande: "SIGNALEMENT ERREUR",
+            rappeur: document.getElementById('erreur-rappeur').value,
+            categorie: document.getElementById('erreur-categorie').value,
+            probleme: document.getElementById('erreur-type').value,
+            explication: document.getElementById('erreur-details').value.trim() || "Aucune précision"
+        }, 'modal-erreur', 'form-erreur');
+    });
+});
+
+function remplirFormulaireAjout() {
+    const container = document.getElementById('ajout-categories-list');
+    if (container.children.length > 0 || !donneesJeu) return;
+
+    Object.keys(donneesJeu._legende_attributs).forEach(index => {
+        const labelText = donneesJeu._legende_attributs[index];
+        const label = document.createElement('label');
+        label.className = 'checkbox-item';
+        label.innerHTML = `<input type="checkbox" value="${index}" data-label="${labelText}"> ${labelText}`;
+        container.appendChild(label);
+    });
+}
+
+function remplirFormulaireErreur() {
+    const selectRappeur = document.getElementById('erreur-rappeur');
+    const selectCat = document.getElementById('erreur-categorie');
+    if (selectRappeur.children.length > 0 || !donneesJeu) return;
+
+    // Liste des rappeurs triée par ordre alphabétique
+    const rappeursTries = [...donneesJeu.rappeurs].sort((a, b) => a.nom.localeCompare(b.nom));
+    rappeursTries.forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r.nom;
+        opt.textContent = r.nom;
+        selectRappeur.appendChild(opt);
+    });
+
+    // Liste des catégories (JSON + Feats)
+    Object.values(donneesJeu._legende_attributs).forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        selectCat.appendChild(opt);
+    });
+    const optFeat = document.createElement('option');
+    optFeat.value = "Featuring manquant / erroné";
+    optFeat.textContent = "Featuring manquant / erroné (préciser en bas)";
+    selectCat.appendChild(optFeat);
+}
+
+async function envoyerVersFormspree(payload, modalId, formId) {
+    try {
+        const response = await fetch(FORMSPREE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (response.ok) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.getElementById(formId).reset();
+            afficherAlerte("Merci !", "Ta suggestion a bien été envoyée pour vérification.");
+        } else {
+            afficherAlerte("Erreur", "Impossible d'envoyer le formulaire. Réessaie plus tard.");
+        }
+    } catch (err) {
+        afficherAlerte("Erreur", "Problème de connexion.");
+    }
+}
