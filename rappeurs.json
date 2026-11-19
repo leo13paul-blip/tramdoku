@@ -1,171 +1,76 @@
 {
   "_legende_attributs": {
-    "0": "Exactement 3 lettres",
-    "1": "Comporte une lettre doublée",
-    "2": "Comporte un chiffre",
-    "3": "Duo ou Groupe",
-    "4": "Rappeuse",
-    "5": "Artiste belge",
-    "6": "A sorti un album avant 2010",
-    "7": "Certification Diamant (single ou album)",
-    "8": "A fait un passage chez COLORS",
-    "9": "Apparaît sur 13 Organisé",
-    "10": "Apparaît sur 93 Empire",
-    "11": "A fait un feat international",
+    "0": "Rappeuse",
+    "1": "Duo de rap",
+    "2": "Groupe de 3 personnes ou plus",
+    "3": "Ancien ou actuel membre d'un groupe (en solo)",
+    "4": "Artiste belge ou suisse",
+    "5": "Identité masquée / cagoulée",
+    "6": "A sorti un album avant l'an 2000",
+    "7": "A sorti un album entre 2000 et 2009",
+    "8": "A sorti un album entre 2010 et 2019",
+    "9": "A sorti un album depuis 2020",
+    "10": "A sorti un album commun (duo)",
+    "11": "Certification Diamant (single ou album)",
     "12": "A déjà rempli un stade",
-    "13": "Identité masquée / cagoulée",
-    "14": "A sorti un album commun (duo)"
+    "13": "A remporté une Victoire de la Musique ou une Flamme",
+    "14": "Apparaît sur 13 Organisé ou Le Classico Organisé",
+    "15": "Apparaît sur 93 Empire",
+    "16": "A fait un passage chez COLORS",
+    "17": "A fait un freestyle Grünt ou Rentre dans le Cercle",
+    "18": "A joué un rôle dans un film ou une série",
+    "19": "A fait un feat international"
   },
   "rappeurs": [
-    {
-      "id": "jul",
-      "nom": "Jul",
-      "attributs": [1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0],
-      "feats": ["sch", "ninho", "naps", "soso_maness", "alonzo", "gazo", "plk", "koba_lad", "kaaris", "gims"]
-    },
-    {
-      "id": "ninho",
-      "nom": "Ninho",
-      "attributs": [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1],
-      "feats": ["jul", "sch", "damso", "niska", "gazo", "tiakola", "plk", "hamza", "rimk", "gims", "nekfeu"]
-    },
-    {
-      "id": "sch",
-      "nom": "SCH",
-      "attributs": [1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0],
-      "feats": ["jul", "ninho", "damso", "gazo", "plk", "hamza", "kaaris", "soso_maness", "naps", "freeze_corleone", "vald"]
-    },
-    {
-      "id": "booba",
-      "nom": "Booba",
-      "attributs": [0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0],
-      "feats": ["kaaris", "damso", "sdm", "gims", "rimk", "niska", "shay", "hamza"]
-    },
-    {
-      "id": "damso",
-      "nom": "Damso",
-      "attributs": [0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0],
-      "feats": ["booba", "ninho", "sch", "hamza", "orelsan", "nekfeu", "gazo", "vald", "gims"]
-    },
-    {
-      "id": "pnl",
-      "nom": "PNL",
-      "attributs": [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-      "feats": []
-    },
-    {
-      "id": "nekfeu",
-      "nom": "Nekfeu",
-      "attributs": [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-      "feats": ["damso", "ninho", "orelsan", "alpha_wann", "plk"]
-    },
-    {
-      "id": "orelsan",
-      "nom": "Orelsan",
-      "attributs": [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1],
-      "feats": ["damso", "nekfeu", "ninho", "vald", "gims"]
-    },
-    {
-      "id": "gazo",
-      "nom": "Gazo",
-      "attributs": [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1],
-      "feats": ["tiakola", "ninho", "sch", "jul", "damso", "hamza", "freeze_corleone", "kaaris", "koba_lad", "sdm"]
-    },
-    {
-      "id": "tiakola",
-      "nom": "Tiakola",
-      "attributs": [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1],
-      "feats": ["gazo", "ninho", "hamza", "sdm", "plk", "gims", "niska", "shay"]
-    },
-    {
-      "id": "sdm",
-      "nom": "SDM",
-      "attributs": [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0],
-      "feats": ["booba", "tiakola", "gazo", "plk", "niska", "hamza"]
-    },
-    {
-      "id": "kaaris",
-      "nom": "Kaaris",
-      "attributs": [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1],
-      "feats": ["booba", "sch", "jul", "gazo", "kalash_criminel", "sofiane", "vald"]
-    },
-    {
-      "id": "vald",
-      "nom": "Vald",
-      "attributs": [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1],
-      "feats": ["orelsan", "damso", "sch", "kaaris", "sofiane", "niska"]
-    },
-    {
-      "id": "plk",
-      "nom": "PLK",
-      "attributs": [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
-      "feats": ["jul", "ninho", "sch", "tiakola", "sdm", "hamza", "nekfeu"]
-    },
-    {
-      "id": "hamza",
-      "nom": "Hamza",
-      "attributs": [0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0],
-      "feats": ["damso", "sch", "ninho", "tiakola", "gazo", "plk", "sdm", "booba", "shay"]
-    },
-    {
-      "id": "niska",
-      "nom": "Niska",
-      "attributs": [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1],
-      "feats": ["ninho", "booba", "gims", "tiakola", "sdm", "koba_lad", "vald"]
-    },
-    {
-      "id": "gims",
-      "nom": "Gims",
-      "attributs": [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0],
-      "feats": ["booba", "ninho", "damso", "jul", "niska", "orelsan", "tiakola", "alonzo", "rimk"]
-    },
-    {
-      "id": "freeze_corleone",
-      "nom": "Freeze Corleone",
-      "attributs": [0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1],
-      "feats": ["sch", "gazo", "alpha_wann", "kaaris", "koba_lad"]
-    },
-    {
-      "id": "shay",
-      "nom": "Shay",
-      "attributs": [0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0],
-      "feats": ["booba", "hamza", "tiakola", "niska"]
-    },
-    {
-      "id": "diams",
-      "nom": "Diam's",
-      "attributs": [0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-      "feats": ["booba", "rimk"]
-    },
-    {
-      "id": "iam",
-      "nom": "IAM",
-      "attributs": [1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0],
-      "feats": ["jul", "sch", "alonzo", "rimk"]
-    },
-    {
-      "id": "113",
-      "nom": "113",
-      "attributs": [1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0],
-      "feats": ["booba", "rimk"]
-    },
-    {
-      "id": "sofiane",
-      "nom": "Sofiane",
-      "attributs": [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0],
-      "feats": ["kaaris", "vald", "kalash_criminel", "ninho", "sch"]
-    },
-    {
-      "id": "kalash_criminel",
-      "nom": "Kalash Criminel",
-      "attributs": [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1],
-      "feats": ["kaaris", "sofiane", "damso", "jul", "nekfeu"]
-    },
-    {
-      "id": "ziak",
-      "nom": "Ziak",
-      "attributs": [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0],
-      "feats": ["koba_lad", "kerchak"]
-    }
+    {"id": "iam", "nom": "IAM", "attributs": [0,0,1,0,0,0,1,1,1,1,0,1,1,1,1,0,0,0,0,1], "feats": ["jul","sch","alonzo","rimk","fonky_family","akhenaton","shurikn"]},
+    {"id": "supreme_ntm", "nom": "Suprême NTM", "attributs": [0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1], "feats": ["joeystarr","kool_shen","sofiane","lord_kossity"]},
+    {"id": "mc_solaar", "nom": "MC Solaar", "attributs": [0,0,0,0,0,0,1,1,1,1,0,1,0,1,0,0,0,0,0,1], "feats": ["bigflo_oli","black_m","youssoupha"]},
+    {"id": "booba", "nom": "Booba", "attributs": [0,0,0,1,0,0,0,1,1,1,0,1,1,0,0,0,0,0,1,1], "feats": ["kaaris","damso","sdm","gims","rimk","niska","shay","hamza","nessbeal","mac_tyer","diams","dosseh"]},
+    {"id": "rohff", "nom": "Rohff", "attributs": [0,0,0,1,0,0,1,1,1,1,0,1,0,0,0,0,0,0,0,1], "feats": ["rimk","kery_james","soprano","la_fouine","bigflo_oli","jul","naps","gims"]},
+    {"id": "diams", "nom": "Diam's", "attributs": [1,0,0,0,0,0,1,1,0,0,0,1,0,1,0,0,0,0,0,0], "feats": ["booba","rimk","sinik","vitaa","amel_bent"]},
+    {"id": "sinik", "nom": "Sinik", "attributs": [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1], "feats": ["diams","kool_shen","rohff","medine","youssoupha","vitaa"]},
+    {"id": "kery_james", "nom": "Kery James", "attributs": [0,0,0,1,0,0,0,1,1,1,0,0,0,0,0,0,0,1,1,0], "feats": ["rohff","rimk","youssoupha","medine","lino","ousmane_sonko","orelsan","kalash_criminel","soprano"]},
+    {"id": "oxmo_puccino", "nom": "Oxmo Puccino", "attributs": [0,0,0,0,0,0,1,1,1,1,0,0,0,1,0,0,0,1,1,0], "feats": ["booba","orelsan","nekfeu","lino","caballero_jeanjass","youssoupha"]},
+    {"id": "la_fouine", "nom": "La Fouine", "attributs": [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1], "feats": ["booba","rohff","soprano","alonzo","youssoupha","sultan","fababy","amel_bent","zaho","koba_lad"]},
+    {"id": "sefyu", "nom": "Sefyu", "attributs": [0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,0], "feats": ["rohff","passi","medine","kery_james","soprano"]},
+    {"id": "rimk", "nom": "Rim'K", "attributs": [0,0,0,1,0,0,0,1,1,1,0,1,0,0,1,0,0,1,0,1], "feats": ["ninho","booba","rohff","sch","plk","vald","sadek","letO","koba_lad","gims","alonzo","sofiane"]},
+    {"id": "youssoupha", "nom": "Youssoupha", "attributs": [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,0,1], "feats": ["kery_james","medine","lino","la_fouine","soprano","disiz","nekfeu","dinos","josman"]},
+    {"id": "medine", "nom": "Médine", "attributs": [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,0,0], "feats": ["booba","kery_james","youssoupha","sofiane","sadek","kalash_criminel","kaaris","orelsan","lino"]},
+    {"id": "lino", "nom": "Lino", "attributs": [0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0], "feats": ["booba","kery_james","youssoupha","medine","oxmo_puccino","rohff","sofiane","rimk"]},
+    {"id": "akhenaton", "nom": "Akhenaton", "attributs": [0,0,0,1,0,0,1,1,1,1,1,1,0,0,1,0,0,0,1,1], "feats": ["shurikn","jul","sch","alonzo","soprano","kery_james","fonky_family"]},
+    {"id": "shurikn", "nom": "Shurik'n", "attributs": [0,0,0,1,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0], "feats": ["akhenaton","iam","jul","alonzo","fianso","kery_james"]},
+    {"id": "joeystarr", "nom": "JoeyStarr", "attributs": [0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,0], "feats": ["kool_shen","supreme_ntm","soprano"]},
+    {"id": "kool_shen", "nom": "Kool Shen", "attributs": [0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,0], "feats": ["joeystarr","supreme_ntm","sinik","rohff","soprano","sofiane","lino"]},
+    {"id": "doc_gyneco", "nom": "Doc Gynéco", "attributs": [0,0,0,1,0,0,1,1,1,0,0,1,0,0,0,0,0,0,1,0], "feats": ["stomy_bugsy","passi","ministere_amer","joeystarr"]},
+    {"id": "stomy_bugsy", "nom": "Stomy Bugsy", "attributs": [0,0,0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,0], "feats": ["passi","doc_gyneco","ministere_amer","oxmo_puccino"]},
+    {"id": "passi", "nom": "Passi", "attributs": [0,0,0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,1], "feats": ["stomy_bugsy","doc_gyneco","ministere_amer","sefyu","calogero"]},
+    {"id": "fonky_family", "nom": "Fonky Family", "attributs": [0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0], "feats": ["iam","akhenaton","le_rat_luciano","sat_lartificier"]},
+    {"id": "lunatic", "nom": "Lunatic", "attributs": [0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0], "feats": ["booba","oxmo_puccino","arsenik"]},
+    {"id": "113", "nom": "113", "attributs": [0,0,1,0,0,0,1,1,1,0,0,1,0,1,0,0,0,0,0,1], "feats": ["rimk","mokobe","ap_du_113","booba","rohff","mafia_k1_fry"]},
+    {"id": "sniper", "nom": "Sniper", "attributs": [0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0], "feats": ["tunisiano","blacko","soprano","sexion_dassaut"]},
+    {"id": "psy_4_de_la_rime", "nom": "Psy 4 de la Rime", "attributs": [0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0], "feats": ["soprano","alonzo","iam","kery_james"]},
+    {"id": "sexion_dassaut", "nom": "Sexion d'Assaut", "attributs": [0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0], "feats": ["gims","black_m","lefa","barack_adama","maska","doomams","jr_o_crom","sniper"]},
+    {"id": "tandem", "nom": "Tandem", "attributs": [0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0], "feats": ["mac_tyer","diams","kery_james","lino","soprano"]},
+    {"id": "arsenik", "nom": "Ärsenik", "attributs": [0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0], "feats": ["lino","lunatic","passi","doc_gyneco","pit_baccardi"]},
+    {"id": "ministere_amer", "nom": "Ministère A.M.E.R.", "attributs": [0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0], "feats": ["passi","stomy_bugsy","doc_gyneco"]},
+    {"id": "mafia_k1_fry", "nom": "Mafia K'1 Fry", "attributs": [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0], "feats": ["kery_james","rohff","rimk","113","mokobe","ap_du_113"]},
+    {"id": "saian_supa_crew", "nom": "Saïan Supa Crew", "attributs": [0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1], "feats": ["busta_rhymes"]},
+    {"id": "ttc", "nom": "TTC", "attributs": [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0], "feats": ["orelsan"]},
+    {"id": "disiz", "nom": "Disiz", "attributs": [0,0,0,0,0,0,0,1,1,1,0,1,0,1,0,0,0,1,1,0], "feats": ["damso","orelsan","youssoupha","fianso","vald","hamza","lomepal"]},
+    {"id": "nessbeal", "nom": "Nessbeal", "attributs": [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0], "feats": ["booba","orelsan","la_fouine","mister_you","zkr","landy"]},
+    {"id": "salif", "nom": "Salif", "attributs": [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0], "feats": ["kool_shen","soprano","tunisiano","nessbeal"]},
+    {"id": "mac_tyer", "nom": "Mac Tyer", "attributs": [0,0,0,1,0,0,0,1,1,1,0,0,0,0,0,1,0,1,0,0], "feats": ["booba","sofiane","rimk","kaaris","ninho","vald","sadek","kalash_criminel"]},
+    {"id": "seth_gueko", "nom": "Seth Gueko", "attributs": [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,1,0], "feats": ["booba","alkpote","sadek","gradur","lacrim","kaaris","mister_you","lino"]},
+    {"id": "alkpote", "nom": "Alkpote", "attributs": [0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,0,1,1,0], "feats": ["vald","kaaris","kalash_criminel","seth_gueko","caballero_jeanjass","lorenzo","freeze_corleone"]},
+    {"id": "tunisiano", "nom": "Tunisiano", "attributs": [0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0], "feats": ["sniper","blacko","youssoupha","vald","zaho"]},
+    {"id": "blacko", "nom": "Blacko", "attributs": [0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0], "feats": ["sniper","tunisiano","soprano","kool_shen"]},
+    {"id": "faf_larage", "nom": "Faf Larage", "attributs": [0,0,0,0,0,0,1,1,1,0,1,0,0,0,1,0,0,0,0,0], "feats": ["shurikn","akhenaton","jul","alonzo","soprano"]},
+    {"id": "pit_baccardi", "nom": "Pit Baccardi", "attributs": [0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0], "feats": ["kery_james","arsenik","passi","doc_gyneco"]},
+    {"id": "keny_arkana", "nom": "Keny Arkana", "attributs": [1,0,0,0,0,0,0,1,1,1,0,0,0,0,1,0,0,0,0,0], "feats": ["jul","iam","alonzo","soprano"]},
+    {"id": "casey", "nom": "Casey", "attributs": [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0], "feats": ["oxmo_puccino","medine"]},
+    {"id": "mokobe", "nom": "Mokobé", "attributs": [0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1], "feats": ["113","rimk","ap_du_113","booba","soprano","gradur"]},
+    {"id": "ap_du_113", "nom": "AP du 113", "attributs": [0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0], "feats": ["113","rimk","mokobe","rohff","kery_james"]},
+    {"id": "le_rat_luciano", "nom": "Le Rat Luciano", "attributs": [0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0], "feats": ["fonky_family","sat_lartificier","jul","sch","alonzo","iam","soprano"]},
+    {"id": "sat_lartificier", "nom": "Sat l'Artificier", "attributs": [0,0,0,1,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0], "feats": ["fonky_family","le_rat_luciano","jul","alonzo","soprano","iam"]}
   ]
 }
