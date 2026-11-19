@@ -1,5 +1,5 @@
 let donneesJeu = null; 
-let toutesLesCategories = []; // Contiendra les attributs classiques + les featurings
+let toutesLesCategories = []; // Attributs JSON + Orthographe auto + Featurings
 let categoriesChoisies = { lignes: [], colonnes: [] };
 let caseActive = null; 
 let grilleGagnee = 0; 
@@ -7,6 +7,9 @@ let erreurs = 0;
 let rappeursUtilises = []; 
 let jeuTermine = false; 
 const MAX_ERREURS = 3; 
+
+// Passe cette valeur à 5 quand tu auras rentré tes 300 rappeurs !
+const MIN_REPONSES_CATEGORIE = 3; 
 
 let graineAleatoire = 1; 
 function generateurAleatoireLocal() {
@@ -25,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('ecran-caca').addEventListener('click', function() { this.classList.add('hidden'); });
     document.getElementById('ecran-pipi').addEventListener('click', function() { this.classList.add('hidden'); });
 
-    // Chargement du fichier rappeurs.json
     fetch('rappeurs.json')
         .then(response => response.json())
         .then(data => { 
@@ -36,26 +38,67 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error("Erreur JSON :", error));
 });
 
-// --- CONSTRUCTION DES CATÉGORIES (CLASSIQUES + FEATURINGS) ---
+// --- UTILITAIRE : ENLEVER LES ACCENTS ---
+function nettoyerTexte(texte) {
+    return texte.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+// --- CONSTRUCTION DES CATÉGORIES ---
 function construireListeCategories() {
     toutesLesCategories = [];
 
-    // 1. Ajouter les catégories binaires (0/1)
+    // 1. Catégories binaires (0/1) issues du fichier JSON
     Object.keys(donneesJeu._legende_attributs).forEach(index => {
-        toutesLesCategories.push({
-            type: 'attr',
-            key: index,
-            label: donneesJeu._legende_attributs[index]
+        const nbValides = donneesJeu.rappeurs.filter(r => r.attributs[index] === 1).length;
+        if (nbValides >= MIN_REPONSES_CATEGORIE) {
+            toutesLesCategories.push({
+                type: 'attr',
+                key: index,
+                label: donneesJeu._legende_attributs[index]
+            });
+        }
+    });
+
+    // 2. Catégories d'orthographe calculées automatiquement
+    const reglesOrtho = [
+        { key: '3_lettres', label: 'Exactement 3 lettres', test: nom => nom.replace(/\s+/g, '').length === 3 },
+        { key: '4_lettres_max', label: '4 lettres ou moins', test: nom => nom.replace(/\s+/g, '').length <= 4 },
+        { key: '10_lettres_min', label: '10 lettres ou plus', test: nom => nom.replace(/\s+/g, '').length >= 10 },
+        { key: 'chiffre', label: 'Comporte au moins un chiffre', test: nom => /\d/.test(nom) },
+        { key: 'article', label: 'Comporte un article (Le, La, L\', Du...)', test: nom => /\b(le|la|les|du|de)\b|\b[ld]'/i.test(nom) },
+        { key: 'lettre_doublee', label: 'Comporte une lettre doublée', test: nom => /([a-z])\1/i.test(nettoyerTexte(nom)) },
+        { key: 'ponctuation', label: 'Comporte un tiret (-) ou une apostrophe (\')', test: nom => /[-']/.test(nom) },
+        { key: '3_mots', label: 'Comporte 3 mots ou plus', test: nom => nom.trim().split(/\s+/).length >= 3 },
+        { key: 'majuscules', label: 'Nom tout en MAJUSCULES', test: nom => nom === nom.toUpperCase() && /[A-Z]/.test(nom) },
+        { key: 'finit_a_o', label: 'Se termine par "A" ou "O"', test: nom => /[ao]$/i.test(nettoyerTexte(nom.trim())) }
+    ];
+
+    // Ajouter les lettres de début (A, B, C...)
+    const lettres = ['A', 'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T'];
+    lettres.forEach(lettre => {
+        reglesOrtho.push({
+            key: `commence_${lettre}`,
+            label: `Commence par la lettre ${lettre}`,
+            test: nom => nettoyerTexte(nom.trim()).toUpperCase().startsWith(lettre)
         });
     });
 
-    // 2. Ajouter automatiquement les catégories "A fait un feat avec X"
-    // Note : passe le "3" à "5" quand tu auras rentré tes 300 rappeurs !
-    const MIN_FEATS_REQUIS = 3; 
+    reglesOrtho.forEach(regle => {
+        const nbValides = donneesJeu.rappeurs.filter(r => regle.test(r.nom)).length;
+        if (nbValides >= MIN_REPONSES_CATEGORIE) {
+            toutesLesCategories.push({
+                type: 'ortho',
+                key: regle.key,
+                label: regle.label,
+                test: regle.test
+            });
+        }
+    });
 
+    // 3. Catégories "A fait un feat avec X"
     donneesJeu.rappeurs.forEach(rappeurCible => {
         const nbFeats = donneesJeu.rappeurs.filter(r => r.feats && r.feats.includes(rappeurCible.id)).length;
-        if (nbFeats >= MIN_FEATS_REQUIS) {
+        if (nbFeats >= MIN_REPONSES_CATEGORIE) {
             toutesLesCategories.push({
                 type: 'feat',
                 key: rappeurCible.id,
@@ -65,17 +108,19 @@ function construireListeCategories() {
     });
 }
 
-// Vérifie si un rappeur valide une catégorie (classique OU featuring)
+// Vérifie si un rappeur valide une catégorie (JSON, Orthographe ou Featuring)
 function rappeurValideCritere(rappeur, categorie) {
     if (categorie.type === 'attr') {
         return rappeur.attributs[categorie.key] === 1;
+    } else if (categorie.type === 'ortho') {
+        return categorie.test(rappeur.nom);
     } else if (categorie.type === 'feat') {
         return rappeur.feats && rappeur.feats.includes(categorie.key);
     }
     return false;
 }
 
-// --- GÉNÉRATION DE LA GRILLE ---
+// --- GÉNÉRATION DE LA GRILLE 3x3 ---
 function initialiserNouvellePartie(estGrilleDuJour = false) {
     if (estGrilleDuJour) {
         const dateAujourdhui = new Date();
@@ -88,18 +133,27 @@ function initialiserNouvellePartie(estGrilleDuJour = false) {
     }
 
     let grilleValide = false;
-    while (!grilleValide) {
-        const categoriesTirees = melangerTableau([...toutesLesCategories]).slice(0, 4);
-        categoriesChoisies.lignes = categoriesTirees.slice(0, 2);
-        categoriesChoisies.colonnes = categoriesTirees.slice(2, 4);
+    let tentatives = 0;
+
+    while (!grilleValide && tentatives < 5000) {
+        tentatives++;
+        const categoriesTirees = melangerTableau([...toutesLesCategories]).slice(0, 6);
+        categoriesChoisies.lignes = categoriesTirees.slice(0, 3);
+        categoriesChoisies.colonnes = categoriesTirees.slice(3, 6);
         grilleValide = verifierGrilleFaisable(categoriesChoisies.lignes, categoriesChoisies.colonnes);
     }
+
+    if (!grilleValide) {
+        afficherAlerte("Erreur", "Impossible de générer une grille 3x3 avec si peu de rappeurs. Ajoute plus de rappeurs dans rappeurs.json !");
+        return;
+    }
+
     afficherGrille();
 }
 
 function verifierGrilleFaisable(lignes, colonnes) {
-    for (let r = 0; r < 2; r++) {
-        for (let c = 0; c < 2; c++) {
+    for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 3; c++) {
             const ok = donneesJeu.rappeurs.find(rappeur => 
                 rappeurValideCritere(rappeur, lignes[r]) && rappeurValideCritere(rappeur, colonnes[c])
             );
@@ -119,7 +173,7 @@ function melangerTableau(array) {
 
 // --- AFFICHAGE & INTERACTIONS ---
 function afficherGrille() {
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 3; i++) {
         document.getElementById(`cat-row-${i}`).textContent = categoriesChoisies.lignes[i].label;
         document.getElementById(`cat-col-${i}`).textContent = categoriesChoisies.colonnes[i].label;
     }
@@ -136,7 +190,7 @@ function afficherGrille() {
     erreurs = 0;
     rappeursUtilises = [];
     jeuTermine = false;
-    document.getElementById('compteur-erreurs').textContent = `Erreurs : 0 / 3`;
+    document.getElementById('compteur-erreurs').textContent = `Erreurs : 0 / ${MAX_ERREURS}`;
     document.getElementById('btn-abandon').classList.remove('hidden');
     document.getElementById('btn-rejouer').classList.add('hidden');
 }
@@ -190,15 +244,15 @@ function fermerModale() {
 }
 
 function gererRecherche(event) {
-    const texteSaisi = event.target.value.toLowerCase();
+    const texteSaisi = nettoyerTexte(event.target.value.toLowerCase());
     const liste = document.getElementById('suggestions-list');
     liste.innerHTML = ""; 
     if (texteSaisi.length < 2) return; 
 
     const resultats = donneesJeu.rappeurs.filter(r => 
-        r.nom.toLowerCase().includes(texteSaisi) && !rappeursUtilises.includes(r.id)
+        nettoyerTexte(r.nom.toLowerCase()).includes(texteSaisi) && !rappeursUtilises.includes(r.id)
     );
-    resultats.slice(0, 5).forEach(rappeur => {
+    resultats.slice(0, 6).forEach(rappeur => {
         const li = document.createElement('li');
         li.textContent = rappeur.nom;
         li.addEventListener('click', () => verifierReponse(rappeur));
@@ -221,10 +275,10 @@ function verifierReponse(rappeurChoisi) {
         caseActive.element.classList.add('correct');
         rappeursUtilises.push(rappeurChoisi.id); 
         grilleGagnee++;
-        if (grilleGagnee === 4) declarerFinDePartie(true);
+        if (grilleGagnee === 9) declarerFinDePartie(true);
     } else {
         erreurs++;
-        document.getElementById('compteur-erreurs').textContent = `Erreurs : ${erreurs} / 3`;
+        document.getElementById('compteur-erreurs').textContent = `Erreurs : ${erreurs} / ${MAX_ERREURS}`;
         
         if (erreurs >= MAX_ERREURS) {
             declarerFinDePartie(false, "defaite");
